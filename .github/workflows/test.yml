@@ -1,0 +1,14 @@
+name: Test
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y gfortran cmake python3-pytest
+      - uses: actions/checkout@v2
+      - name: Run test
+        run: pytest test/test.py
