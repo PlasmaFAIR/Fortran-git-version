@@ -29,6 +29,15 @@ target_compile_definitions(fortran_git PRIVATE
   "GIT_STATE='${GIT_STATE}'"
   )
 
+set(fortran_git_module_dir "${CMAKE_CURRENT_BINARY_DIR}/mod")
+set_target_properties(fortran_git PROPERTIES
+  Fortran_MODULE_DIRECTORY ${fortran_git_module_dir}
+  )
+
+target_include_directories(fortran_git PUBLIC
+  $<BUILD_INTERFACE:${fortran_git_module_dir}>
+  )
+
 ##################################################
 # Example use
 
