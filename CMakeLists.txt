@@ -5,8 +5,8 @@ project(example-fortran-git
   )
 
 add_library(fortran_git
-  git_version_mod.f90
-  git_version_impl.F90)
+  src/git_version.f90
+  src/git_version_impl.F90)
 
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 include(GetGitRevisionDescription)
