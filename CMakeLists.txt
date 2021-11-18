@@ -1,6 +1,7 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.18)
 
-project(example-fortran-git
+project(fortran-git
+  DESCRIPTION "Interface to get git version/commit in compiled code"
   LANGUAGES Fortran
   )
 
