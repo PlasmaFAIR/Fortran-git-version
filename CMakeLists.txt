@@ -23,7 +23,17 @@ target_compile_definitions(fortran_git PRIVATE
   "GIT_STATE='${GIT_STATE}'"
   )
 
-add_executable(example
-  example.f90)
+##################################################
+# Example use
 
-target_link_libraries(example fortran_git)
+string(COMPARE EQUAL
+  "${PROJECT_NAME}" "${CMAKE_PROJECT_NAME}"
+  PROJECT_IS_TOP_LEVEL
+)
+
+option(FORTRAN_GIT_BUILD_EXAMPLES "Build the example" ${PROJECT_IS_TOP_LEVEL})
+
+if (FORTRAN_GIT_BUILD_EXAMPLES)
+  add_executable(example example/example.f90)
+  target_link_libraries(example fortran_git)
+endif()
