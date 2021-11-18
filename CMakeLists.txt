@@ -9,6 +9,8 @@ add_library(fortran_git
   src/git_version.f90
   src/git_version_impl.F90)
 
+add_library(fortran_git::fortran_git ALIAS fortran_git)
+
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 include(GetGitRevisionDescription)
 git_get_commit(GIT_SHA1)
