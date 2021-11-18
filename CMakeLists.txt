@@ -20,6 +20,9 @@ message(STATUS "GIT_SHA1=${GIT_SHA1}")
 message(STATUS "GIT_VERSION=${GIT_VERSION}")
 message(STATUS "GIT_STATE=${GIT_STATE}")
 
+set_source_files_properties(git_version_impl.F90
+  PROPERTIES Fortran_PREPROCESS ON)
+
 target_compile_definitions(fortran_git PRIVATE
   "GIT_SHA1='${GIT_SHA1}'"
   "GIT_VERSION='${GIT_VERSION}'"
