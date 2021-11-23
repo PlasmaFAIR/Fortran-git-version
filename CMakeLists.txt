@@ -14,10 +14,10 @@ add_library(fortran_git::fortran_git ALIAS fortran_git)
 set(CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 include(GetGitRevisionDescription)
 git_get_commit(GIT_SHA1)
-git_get_version(GIT_VERSION)
-git_local_changes(GIT_STATE)
 message(STATUS "GIT_SHA1=${GIT_SHA1}")
+git_get_version(GIT_VERSION)
 message(STATUS "GIT_VERSION=${GIT_VERSION}")
+git_local_changes(GIT_STATE)
 message(STATUS "GIT_STATE=${GIT_STATE}")
 
 set_source_files_properties(git_version_impl.F90
