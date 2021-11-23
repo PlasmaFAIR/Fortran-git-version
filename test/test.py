@@ -4,7 +4,7 @@ from shutil import copytree, copy, rmtree
 import os
 
 
-def run_shell(command: str, **kwargs) -> None:
+def run_shell(command: str, **kwargs):
     return run(command, shell=True, check=True, **kwargs)
 
 
