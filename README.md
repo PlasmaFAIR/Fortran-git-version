@@ -7,6 +7,12 @@ the git version of your project in your application or library.
 The implementation is split out into a Fortran submodule in order to
 avoid re-compilation cascades from `use` of the parent module.
 
+Uses the popular `GetGitRevisionDescription.cmake` from
+[rpavlik's](https://github.com/rpavlik/cmake-modules)
+[cmake-modules](https://github.com/rpavlik/cmake-modules) collection,
+used under the [Boost Software
+Licence](https://www.boost.org/LICENSE_1_0.txt).
+
 Requirements
 ------------
 
