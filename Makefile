@@ -14,3 +14,4 @@ $(shell touch $(PATCHFILE))
 else
 	GIT_STATE:="modified"
 	MACRO_DEFS+=-DGIT_STATE='$(GIT_STATE)'
+endif
