@@ -8,6 +8,13 @@ def run_shell(command: str, **kwargs):
     return run(command, shell=True, check=True, **kwargs)
 
 
+def build_and_run():
+    """Build and run the test program, returning the printed version and commit"""
+    run_shell("cmake --build build")
+    output = run_shell("build/test_program", capture_output=True, text=True).stdout
+    return output.splitlines()
+
+
 def test_fortran_git(tmp_path):
     # First, set up a fake project by copying this whole project into a temp dir
     test_dir = pathlib.Path(__file__).parent
@@ -30,13 +37,11 @@ def test_fortran_git(tmp_path):
     run_shell("git tag v1.2.3")
     commit = run_shell("git rev-parse HEAD", capture_output=True, text=True).stdout
 
-    # Build the fake project
+    # Configure the fake project
     run_shell("cmake . -B build")
-    run_shell("cmake --build build")
 
     # Run the test program and extract the printed version and commit
-    output = run_shell("build/test_program", capture_output=True, text=True).stdout
-    version_line, commit_line = output.splitlines()
+    version_line, commit_line = build_and_run()
 
     assert version_line.strip() == "Version: v1.2.3"
     assert commit_line.strip() == f"Latest commit: {commit[:7]}"
@@ -47,10 +52,13 @@ def test_fortran_git(tmp_path):
     run_shell("git commit -m 'Empty commit' --allow-empty")
     commit = run_shell("git rev-parse HEAD", capture_output=True, text=True).stdout
 
-    run_shell("cmake --build build")
-
-    output = run_shell("build/test_program", capture_output=True, text=True).stdout
-    version_line, commit_line = output.splitlines()
+    version_line, commit_line = build_and_run()
 
     assert version_line.strip() == f"Version: v1.2.3-2-g{commit[:7]}"
+    assert commit_line.strip() == f"Latest commit: {commit[:7]}"
+
+    run_shell("echo ' ' >> test_program.f90")
+    version_line, commit_line = build_and_run()
+
+    assert version_line.strip() == f"Version: v1.2.3-2-g{commit[:7]}-dirty"
     assert commit_line.strip() == f"Latest commit: {commit[:7]}"

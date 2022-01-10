@@ -1,17 +1,9 @@
 ! SPDX-License-Identifier: MIT
+
+#include "@CMAKE_CURRENT_BINARY_DIR@/version.h"
+
 submodule (git_version) git_version_impl
   implicit none
-#ifndef GIT_SHA1
-#define GIT_SHA1 "unknown"
-#endif
-
-#ifndef GIT_STATE
-#define GIT_STATE "unknown"
-#endif
-
-#ifndef GIT_VERSION
-#define GIT_VERSION "unknown"
-#endif
 contains
   module procedure get_git_version
     integer, parameter :: max_length = 40
