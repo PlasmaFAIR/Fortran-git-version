@@ -9,12 +9,12 @@ module git_version
     !> Returns the git version from `git describe`
     !>
     !> This looks like: `{tag}-g{hash}[-dirty]`
-    module function get_git_version()
+    pure module function get_git_version()
       character(:), allocatable :: get_git_version
     end function get_git_version
 
     !> Returns the git hash of the current commit
-    module function get_git_hash(length_in)
+    pure module function get_git_hash(length_in)
       integer, optional, intent(in) :: length_in
       integer :: length
       character(:), allocatable :: get_git_hash
@@ -22,12 +22,12 @@ module git_version
 
     !> Return "-dirty" if the repository has modifications to tracked
     !> files, or the empty string otherwise
-    module function get_git_state()
+    pure module function get_git_state()
       character(:), allocatable :: get_git_state
     end function get_git_state
 
     !> Returns the short date (YYYY-MM-DD) of the current commit
-    module function get_git_date()
+    pure module function get_git_date()
       character(len=10) :: get_git_date
     end function get_git_date
   end interface
