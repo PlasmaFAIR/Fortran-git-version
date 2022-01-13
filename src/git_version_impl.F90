@@ -1,6 +1,8 @@
 ! SPDX-License-Identifier: MIT
 
-#include "@CMAKE_CURRENT_BINARY_DIR@/version.h"
+#ifndef FORTRAN_GIT_DONT_USE_VERSION_HEADER
+#include "fortran_git_version.h"
+#endif
 
 submodule (git_version) git_version_impl
   implicit none
