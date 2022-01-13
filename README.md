@@ -12,48 +12,29 @@ Requirements
 
 Fortran-git-version requires `git` and a Fortran compiler that supports
 submodules -- this should be any recent-ish compiler, for example
-gfortran has supported submodules since version 6.
+`gfortran` has supported Fortran submodules since version 6.
 
 Usage
 -----
 
-You should include a copy of Fortran-git-version in your project. In
-particular, you should **NOT** do any of the following:
+Fortran-git-version can be either copied wholesale into your project,
+or used as a git submodule. The module `git_version` provides the
+following functions:
 
-- include Fortran-git-version as a git submodule
-- compile or install Fortran-git-version separately from your project
-- use Fortran-git-version via CMake's `FetchContent`
+- `get_git_version`: returns the version number from `git describe`
+- `get_git_hash`: returns the hash of the latest commit
+- `get_git_state`: returns either "clean" or "-dirty"
 
-Doing any of the above will cause Fortran-git-version to capture _its
-own_ version, and not your software's.
-
-You probably want to delete the `.git` directory from your bundled
-copy, otherwise git will print a warning like:
-
-```
-warning: adding embedded git repository: fortran-git-version
-hint: You've added another git repository inside your current repository.
-hint: Clones of the outer repository will not contain the contents of
-hint: the embedded repository and will not know how to obtain it.
-hint: If you meant to add a submodule, use:
-hint:
-hint:   git submodule add <url> fortran-git-version
-hint:
-hint: If you added this path by mistake, you can remove it from the
-hint: index with:
-hint:
-hint:   git rm --cached fortran-git-version
-hint:
-hint: See "git help submodule" for more information.
-```
-
-If you see this warning, run:
+The full version as returned from `get_git_version` is the output of
 
 ```bash
-$ git rm --cached --force fortran-git-version
-$ rm -rf fortran-git-version/.git
-$ git add fortran-git-version
+git describe --tags --always --dirty
 ```
+
+See [`git describe --help`][git-describe-help] for a full description,
+but this gives a version number in the form
+`<tag>[-N[-g<hash>][-dirty]]`, where `N` is the number of commits
+since the latest `<tag>`.
 
 CMake
 -----
@@ -65,3 +46,31 @@ add_subdirectory(fortran-git-version)
 
 target_link_libraries(<your target> PRIVATE fortran_git::fortran_git)
 ```
+
+There are three configuration options:
+
+- `FORTRAN_GIT_WORKING_TREE`: set the working tree to get the `git`
+  information from
+- `FORTRAN_GIT_DEBUG`: print some extra information during the
+  configure/build process
+- `FORTRAN_GIT_BUILD_EXAMPLES`: build the example program
+
+You normally shouldn't need to set `FORTRAN_GIT_WORKING_TREE` as it
+should be worked out automatically, but there may be scenarios where
+you need to set it manually.
+
+Makefile
+--------
+
+Fortran-git-version comes with a makefile snippet that you can
+incorporate into your project. It has one option:
+
+- `FORTRAN_GIT_WORKING_TREE`: set the directory to run the `git`
+  executable in. Defaults to `.`
+  
+It creates a variable `FORTRAN_GIT_DEFS` that you should add to the
+compilation line. You will need to compile `src/git_version.f90`, and
+preprocess and compile `src/git_version_impl.F90`. 
+
+
+[git-describe-help]: https://git-scm.com/docs/git-describe

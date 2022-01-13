@@ -2,9 +2,11 @@ import pathlib
 from subprocess import run
 from shutil import copytree, copy, rmtree
 import os
+import pytest
 
 
 def run_shell(command: str, **kwargs):
+    print(f"Run: {command}")
     return run(command, shell=True, check=True, **kwargs)
 
 
@@ -15,23 +17,28 @@ def build_and_run():
     return output.splitlines()
 
 
-def test_fortran_git(tmp_path):
+@pytest.mark.parametrize("use_submodule", [True, False])
+def test_fortran_git(tmp_path, use_submodule):
     # First, set up a fake project by copying this whole project into a temp dir
     test_dir = pathlib.Path(__file__).parent
-    fortran_git_dir = test_dir.parent
+    fortran_git_dir = test_dir.parent.absolute()
     copied_fortran_git_dir = tmp_path / "fortran-git-version"
 
-    copytree(fortran_git_dir, copied_fortran_git_dir, dirs_exist_ok=True)
-    rmtree(copied_fortran_git_dir / ".git", ignore_errors=True)
-    rmtree(copied_fortran_git_dir / "build", ignore_errors=True)
+    # Create a git repo from our project
+    os.chdir(tmp_path)
+    run_shell("git init")
+
+    if use_submodule:
+        run_shell(f"git submodule add {fortran_git_dir} fortran-git-version")
+    else:
+        copytree(fortran_git_dir, copied_fortran_git_dir, dirs_exist_ok=True)
+        rmtree(copied_fortran_git_dir / ".git", ignore_errors=True)
+        rmtree(copied_fortran_git_dir / "build", ignore_errors=True)
 
     # We use the test program and CMake files as the basis of our fake project
     copy(test_dir / "CMakeLists.txt", tmp_path)
     copy(test_dir / "test_program.f90", tmp_path)
 
-    # Now we need to create a git repo from our project, including a tag
-    os.chdir(tmp_path)
-    run_shell("git init")
     run_shell("git add --all")
     run_shell('git commit -m "Initial commmit"')
     run_shell("git tag v1.2.3")
