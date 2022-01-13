@@ -98,6 +98,6 @@ add_dependencies(fortran_git version_header)
 # Example use
 
 if (FORTRAN_GIT_BUILD_EXAMPLES)
-  add_executable(example example/example.f90)
+  add_executable(example test/test_program.f90)
   target_link_libraries(example fortran_git)
 endif()
