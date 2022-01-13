@@ -38,4 +38,8 @@ contains
       get_git_state = "-dirty"
     endif
   end procedure get_git_state
+
+  module procedure get_git_date
+    get_git_date = GIT_DATE
+  end procedure get_git_date
 end submodule git_version_impl

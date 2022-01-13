@@ -1,6 +1,7 @@
 import pathlib
 from subprocess import run
 from shutil import copytree, copy, rmtree
+import datetime
 import os
 import pytest
 
@@ -15,6 +16,10 @@ def build_and_run():
     run_shell("cmake --build build")
     output = run_shell("build/test_program", capture_output=True, text=True).stdout
     return output.splitlines()
+
+
+def date_is_today(line):
+    return datetime.date.fromisoformat(line[7:]) == datetime.date.today()
 
 
 @pytest.mark.parametrize("use_submodule", [True, False])
@@ -48,10 +53,11 @@ def test_fortran_git(tmp_path, use_submodule):
     run_shell("cmake . -B build")
 
     # Run the test program and extract the printed version and commit
-    version_line, commit_line = build_and_run()
+    version_line, commit_line, date_line = build_and_run()
 
     assert version_line.strip() == "Version: v1.2.3"
     assert commit_line.strip() == f"Latest commit: {commit[:7]}"
+    assert date_is_today(date_line)
 
     # Add a couple more commits to check the program gets rebuilt and
     # the git info updated
@@ -59,13 +65,15 @@ def test_fortran_git(tmp_path, use_submodule):
     run_shell("git commit -m 'Empty commit' --allow-empty")
     commit = run_shell("git rev-parse HEAD", capture_output=True, text=True).stdout
 
-    version_line, commit_line = build_and_run()
+    version_line, commit_line, date_line = build_and_run()
 
     assert version_line.strip() == f"Version: v1.2.3-2-g{commit[:7]}"
     assert commit_line.strip() == f"Latest commit: {commit[:7]}"
+    assert date_is_today(date_line)
 
     run_shell("echo ' ' >> test_program.f90")
-    version_line, commit_line = build_and_run()
+    version_line, commit_line, date_line = build_and_run()
 
     assert version_line.strip() == f"Version: v1.2.3-2-g{commit[:7]}-dirty"
     assert commit_line.strip() == f"Latest commit: {commit[:7]}"
+    assert date_is_today(date_line)

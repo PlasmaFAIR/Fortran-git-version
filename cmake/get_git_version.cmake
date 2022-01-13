@@ -28,10 +28,17 @@ else()
   set(GIT_STATE "dirty")
 endif()
 
+execute_process(
+  COMMAND "${GIT_EXECUTABLE}" -C "${GIT_DIR}" show -q --pretty=format:%as HEAD
+  OUTPUT_VARIABLE GIT_DATE
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
 if (FORTRAN_GIT_DEBUG)
   message(STATUS "GIT_SHA1=${GIT_SHA1}")
   message(STATUS "GIT_VERSION=${GIT_VERSION}")
   message(STATUS "GIT_STATE=${GIT_STATE}")
+  message(STATUS "GIT_DATE=${GIT_DATE}")
 endif()
 
 configure_file(${SRC} ${DST} @ONLY)

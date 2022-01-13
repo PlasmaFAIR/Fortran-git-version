@@ -23,7 +23,10 @@ following functions:
 
 - `get_git_version`: returns the version number from `git describe`
 - `get_git_hash`: returns the hash of the latest commit
-- `get_git_state`: returns either "clean" or "-dirty"
+- `get_git_state`: returns "-dirty" if there are local modifications,
+  otherwise the empty string
+- `get_git_date`: returns the short timestamp (YYYY-MM-DD) of the
+  latest commit
 
 The full version as returned from `get_git_version` is the output of
 

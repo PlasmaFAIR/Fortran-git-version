@@ -19,6 +19,9 @@ else
 	FORTRAN_GIT_DEFS+=-DGIT_STATE='$(GIT_STATE)'
 endif
 
+GIT_DATE := $(shell git -C "${FORTRAN_GIT_WORKING_TREE}" show -q --pretty=format:%as HEAD)
+FORTRAN_GIT_DEFS += -DGIT_DATE='"$(GIT_DATE)"'
+
 # Dump the compilation flags to a file, so we can check if they change between
 # invocations of `make`. The `cmp` bit checks if the file contents
 # change. Adding a dependency of a file on `fortran_git_version` causes it to be
