@@ -57,7 +57,13 @@ There are three configuration options:
 
 You normally shouldn't need to set `FORTRAN_GIT_WORKING_TREE` as it
 should be worked out automatically, but there may be scenarios where
-you need to set it manually.
+you need to set it manually. For example, where you have embedded
+`fortran-git-version` in a project _without_ using a git submodule,
+and your project is then used in _another_ project as a git
+submodule. In this case, `fortran-git-version` would pick up the
+version from the parent superproject, rather than your project. You
+would then need to explicitly set `FORTRAN_GIT_WORKING_TREE` in your
+project to `CMAKE_CURRENT_SOURCE_DIR`.
 
 Makefile
 --------
