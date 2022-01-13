@@ -72,5 +72,7 @@ It creates a variable `FORTRAN_GIT_DEFS` that you should add to the
 compilation line. You will need to compile `src/git_version.f90`, and
 preprocess and compile `src/git_version_impl.F90`. 
 
+Warning: the makefile snippet is much less developed than the CMake
+implementation, so use at your own risk!
 
 [git-describe-help]: https://git-scm.com/docs/git-describe
