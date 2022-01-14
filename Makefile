@@ -29,9 +29,9 @@ FORTRAN_GIT_DEFS += -DGIT_DATE='"$(GIT_DATE)"'
 # https://stackoverflow.com/a/3237349/2043465
 GIT_VERSION_MACROS = "$(GIT_VERSION) ${GIT_STATE} ${GIT_SHA1}"
 .PHONY: force
-fortran_git_version: force
+.fortran_git_version: force
 	@echo -e $(GIT_VERSION_MACROS) | cmp -s - $@ || echo -e $(GIT_VERSION_MACROS) > $@
 
 # This file needs to be rebuilt if any of the git version information
 # changes. You may need to set up VPATH or customise the following line:
-git_version_impl.o: fortran_git_version
+git_version_impl.o: .fortran_git_version
