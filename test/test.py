@@ -1,3 +1,4 @@
+import itertools
 import pathlib
 from subprocess import run
 from shutil import copytree, copy, rmtree
@@ -22,8 +23,22 @@ def date_is_today(line):
     return datetime.date.fromisoformat(line[7:]) == datetime.date.today()
 
 
-@pytest.mark.parametrize("use_submodule", [True, False])
-def test_fortran_git(tmp_path, use_submodule):
+@pytest.mark.parametrize(
+    "use_submodule, use_git_wrapper", itertools.product([True, False], [True, False])
+)
+def test_fortran_git(tmp_path, use_submodule, use_git_wrapper):
+    """Test fortran-git-version by using it in a project
+
+    Parameters
+    ----------
+    use_submodule : bool
+        Whether we use a git submodule or just embed
+        fortran-git-version directly
+    use_git_wrapper : bool
+        Use a wrapper that claims to be git 1.8.3
+
+    """
+
     # First, set up a fake project by copying this whole project into a temp dir
     test_dir = pathlib.Path(__file__).parent
     fortran_git_dir = test_dir.parent.absolute()
@@ -49,8 +64,11 @@ def test_fortran_git(tmp_path, use_submodule):
     run_shell("git tag v1.2.3")
     commit = run_shell("git rev-parse HEAD", capture_output=True, text=True).stdout
 
+    git_executable = (
+        f"-DGIT_EXECUTABLE={test_dir / 'git_wrapper.sh'}" if use_git_wrapper else ""
+    )
     # Configure the fake project
-    run_shell("cmake . -B build")
+    run_shell(f"cmake . -B build {git_executable}")
 
     # Run the test program and extract the printed version and commit
     version_line, commit_line, date_line = build_and_run()
