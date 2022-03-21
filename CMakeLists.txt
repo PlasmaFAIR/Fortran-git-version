@@ -58,8 +58,8 @@ if (NOT FORTRAN_GIT_WORKING_TREE)
   if (PROJECT_IS_TOP_LEVEL)
     set(FORTRAN_GIT_WORKING_TREE ".")
   elseif (GIT_VERSION_STRING VERSION_LESS "2.13.0")
-    message(WARNING "Cannot automatically detect superproject. Using '${PROJECT_SOURCE_DIR}'")
-    set(FORTRAN_GIT_WORKING_TREE "${PROJECT_SOURCE_DIR}")
+    message(WARNING "Cannot automatically detect superproject. Using '${CMAKE_SOURCE_DIR}'")
+    set(FORTRAN_GIT_WORKING_TREE "${CMAKE_SOURCE_DIR}")
   else()
     execute_process(
       COMMAND "${GIT_EXECUTABLE}" rev-parse --show-superproject-working-tree
